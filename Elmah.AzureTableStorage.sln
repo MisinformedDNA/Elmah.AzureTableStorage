@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elmah.AzureTableStorage", "src\Elmah.AzureTableStorage\Elmah.AzureTableStorage.csproj", "{406F3242-29FF-4AC8-A838-F95F4E5681EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elmah.AzureTableStorage.Demo", "samples\demo\Elmah.AzureTableStorage.Demo\Elmah.AzureTableStorage.Demo.csproj", "{C6A8F4C2-8133-4D3B-BBB2-4A73817BC84C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{406F3242-29FF-4AC8-A838-F95F4E5681EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{406F3242-29FF-4AC8-A838-F95F4E5681EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{406F3242-29FF-4AC8-A838-F95F4E5681EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{406F3242-29FF-4AC8-A838-F95F4E5681EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6A8F4C2-8133-4D3B-BBB2-4A73817BC84C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6A8F4C2-8133-4D3B-BBB2-4A73817BC84C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6A8F4C2-8133-4D3B-BBB2-4A73817BC84C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6A8F4C2-8133-4D3B-BBB2-4A73817BC84C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
