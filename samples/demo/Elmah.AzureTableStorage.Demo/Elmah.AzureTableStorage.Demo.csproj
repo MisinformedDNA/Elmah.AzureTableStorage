@@ -43,9 +43,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
     </Reference>
-    <Reference Include="Elmah.AzureTableStorage, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Elmah.AzureTableStorage, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Elmah.AzureTableStorage.0.1.0.0\lib\net40\Elmah.AzureTableStorage.dll</HintPath>
+      <HintPath>..\..\..\packages\Elmah.AzureTableStorage.0.5.0.0\lib\net40\Elmah.AzureTableStorage.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
