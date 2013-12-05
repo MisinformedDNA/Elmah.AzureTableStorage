@@ -1,6 +1,6 @@
 <configuration>
   <connectionStrings>
-    <add name="ElmahAzureTableStorage" connectionString="UseDevelopmentStorage=true" providerName="System.Data.SqlClient" />
+    <add name="ElmahAzureTableStorage" connectionString="UseDevelopmentStorage=true" />
   </connectionStrings>
   <elmah>
     <errorLog type="Elmah.AzureTableStorage.AzureTableStorageErrorLog, Elmah.AzureTableStorage" connectionStringName="ElmahAzureTableStorage" />
