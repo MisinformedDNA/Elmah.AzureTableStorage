@@ -118,6 +118,7 @@ namespace Elmah.AzureTableStorage
             // This obviously has a performance hit, but since users are usually looking at the latest ones, this may be OK for most scenarios.
             var errorEntities = _tableContext
                 .CreateQuery<ElmahEntity>(TableName)
+                .Where(e => e.ApplicationName == ApplicationName)
                 .AsTableServiceQuery(_tableContext)
                 .Take((pageIndex + 1) * pageSize)
                 .ToList()
