@@ -89,7 +89,7 @@ namespace Elmah.AzureTableStorage
             var elmahEntity = new ElmahEntity
             {
                 AllXml = ErrorXml.EncodeString(error),
-                ApplicationName = error.ApplicationName,
+                ApplicationName = ApplicationName,
                 HostName = error.HostName,
                 Message = error.Message,
                 Source = error.Source,
