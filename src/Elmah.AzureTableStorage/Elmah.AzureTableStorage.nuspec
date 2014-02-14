@@ -12,6 +12,7 @@
     <description>$description$</description>
     <copyright>Copyright 2013</copyright>
     <tags>elmah azure</tags>
+    <releaseNotes></releaseNotes>
   </metadata>
   <files>
     <file src="content\*.*" target="content\" />
