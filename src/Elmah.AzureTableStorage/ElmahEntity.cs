@@ -1,8 +1,10 @@
-﻿using Microsoft.WindowsAzure.Storage.Table;
+﻿using System.Data.Services.Common;
+using Microsoft.WindowsAzure.Storage.Table;
 using System;
 
 namespace Elmah.AzureTableStorage
 {
+    [DataServiceKey("PartitionKey", "RowKey")]
     internal class ElmahEntity : TableEntity
     {
         public ElmahEntity()
