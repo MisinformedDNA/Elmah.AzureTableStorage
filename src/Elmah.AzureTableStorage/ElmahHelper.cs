@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.WindowsAzure;
+using System;
 using System.Collections;
 using System.Configuration;
 
@@ -53,7 +54,7 @@ namespace Elmah.AzureTableStorage
 
             var connectionStringAppKey = config.Find("connectionStringAppKey", string.Empty);
             return connectionStringAppKey.Length > 0
-                 ? ConfigurationManager.AppSettings[connectionStringAppKey]
+                 ? CloudConfigurationManager.GetSetting(connectionStringAppKey)
                  : string.Empty;
         }
     }
