@@ -8,7 +8,12 @@ namespace Elmah.AzureTableStorage
     internal class ElmahEntity : TableEntity
     {
         public ElmahEntity()
-            : base(string.Empty, (DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks).ToString("d19"))
+        {
+            // Azure Table Storage requires an empty constructor.
+        }
+
+        public ElmahEntity(string applicationName)
+            : base(AzureHelper.EncodeAzureKey(applicationName), (DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks).ToString("d19"))
         {
         }
 

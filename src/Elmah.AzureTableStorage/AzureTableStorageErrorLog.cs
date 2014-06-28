@@ -86,7 +86,7 @@ namespace Elmah.AzureTableStorage
             if (error == null)
                 throw new ArgumentNullException("error");
 
-            var elmahEntity = new ElmahEntity
+            var elmahEntity = new ElmahEntity(ApplicationName)
             {
                 AllXml = ErrorXml.EncodeString(error),
                 ApplicationName = ApplicationName,
@@ -116,9 +116,10 @@ namespace Elmah.AzureTableStorage
 
             // Skip is not allowed, so we will take extra records and then discard ones that weren't requested.
             // This obviously has a performance hit, but since users are usually looking at the latest ones, this may be OK for most scenarios.
+            var partitionKey = AzureHelper.EncodeAzureKey(ApplicationName);
             var errorEntities = _tableContext
                 .CreateQuery<ElmahEntity>(TableName)
-                .Where(e => e.ApplicationName == ApplicationName)
+                .Where(e => e.PartitionKey == partitionKey)
                 .AsTableServiceQuery(_tableContext)
                 .Take((pageIndex + 1) * pageSize)
                 .ToList()
