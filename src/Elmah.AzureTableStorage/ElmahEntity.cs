@@ -4,7 +4,6 @@ using System;
 
 namespace Elmah.AzureTableStorage
 {
-    [DataServiceKey("PartitionKey", "RowKey")]
     public class ElmahEntity : TableEntity
     {
         public ElmahEntity()
