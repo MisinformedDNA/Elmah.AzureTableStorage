@@ -29,12 +29,12 @@ namespace Elmah.AzureTableStorage
     {
         internal static string EncodeAzureKey(string key)
         {
-            return key == null ? null : Convert.ToBase64String(Encoding.UTF8.GetBytes(key));
+            return string.IsNullOrEmpty(key) ? null : Convert.ToBase64String(Encoding.UTF8.GetBytes(key)).Replace("/", "_");
         }
 
         internal static string DecodeAzureKey(string encodedKey)
         {
-            return encodedKey == null ? null : Encoding.UTF8.GetString(Convert.FromBase64String(encodedKey));
+            return string.IsNullOrEmpty(encodedKey) ? null : Encoding.UTF8.GetString(Convert.FromBase64String(encodedKey)).Replace("_", "/");
         }
     }
 }
