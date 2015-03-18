@@ -86,7 +86,6 @@ namespace Elmah.AzureTableStorage
 
             var elmahEntity = new ElmahEntity(ApplicationName)
             {
-                AllXml = ErrorXml.EncodeString(error),
                 ApplicationName = ApplicationName,
                 HostName = error.HostName,
                 Message = error.Message,
@@ -95,6 +94,7 @@ namespace Elmah.AzureTableStorage
                 Type = error.Type,
                 User = error.User,
             };
+            elmahEntity.SetXml(ErrorXml.EncodeString(error));
 
             var tableOperation = TableOperation.Insert(elmahEntity);
             _cloudTable.Execute(tableOperation);
@@ -121,7 +121,7 @@ namespace Elmah.AzureTableStorage
 
             foreach (var errorEntity in errorEntities)
             {
-                var error = ErrorXml.DecodeString(errorEntity.AllXml);
+                var error = ErrorXml.DecodeString(errorEntity.GetXml());
                 errorEntryList.Add(new ErrorLogEntry(this, errorEntity.RowKey, error));
             }
 
@@ -148,7 +148,7 @@ namespace Elmah.AzureTableStorage
                 .ToList()
                 .First();
 
-            var error = ErrorXml.DecodeString(elmahEntity.AllXml);
+            var error = ErrorXml.DecodeString(elmahEntity.GetXml());
             return new ErrorLogEntry(this, id, error);
         }
     }
