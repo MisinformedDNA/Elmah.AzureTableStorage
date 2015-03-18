@@ -14,7 +14,6 @@ namespace Elmah.AzureTableStorage
 
     public class AzureTableStorageErrorLog : ErrorLog
     {
-        private readonly TableServiceContext _tableContext;
         private readonly CloudTable _cloudTable;
         private const string TableName = "Elmah";
 
@@ -42,7 +41,6 @@ namespace Elmah.AzureTableStorage
 
             var cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
             var tableClient = cloudStorageAccount.CreateCloudTableClient();
-            _tableContext = tableClient.GetTableServiceContext();
             _cloudTable = tableClient.GetTableReference(TableName);
             _cloudTable.CreateIfNotExists();
 
@@ -117,13 +115,9 @@ namespace Elmah.AzureTableStorage
             // Skip is not allowed, so we will take extra records and then discard ones that weren't requested.
             // This obviously has a performance hit, but since users are usually looking at the latest ones, this may be OK for most scenarios.
             var partitionKey = AzureHelper.EncodeAzureKey(ApplicationName);
-            var errorEntities = _tableContext
-                .CreateQuery<ElmahEntity>(TableName)
-                .Where(e => e.PartitionKey == partitionKey)
-                .AsTableServiceQuery(_tableContext)
-                .Take((pageIndex + 1) * pageSize)
-                .ToList()
-                .Skip(pageIndex * pageSize);
+           var errorEntities =  _cloudTable.ExecuteQuery<ElmahEntity>(new TableQuery<ElmahEntity>().Where(TableQuery.GenerateFilterCondition("PartitionKey", "eq", partitionKey)))
+                .Skip(pageIndex * pageSize)
+                .Take((pageIndex + 1) * pageSize);
 
             foreach (var errorEntity in errorEntities)
             {
