@@ -41,7 +41,7 @@ namespace Elmah.AzureTableStorage
             var cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
             var tableClient = cloudStorageAccount.CreateCloudTableClient();
             _cloudTable = tableClient.GetTableReference(TableName);
-                _cloudTable.CreateIfNotExists();
+            _cloudTable.CreateIfNotExists();
 
             //
             // Set the application name as this implementation provides
@@ -114,9 +114,13 @@ namespace Elmah.AzureTableStorage
             // Skip is not allowed, so we will take extra records and then discard ones that weren't requested.
             // This obviously has a performance hit, but since users are usually looking at the latest ones, this may be OK for most scenarios.
             var partitionKey = AzureHelper.EncodeAzureKey(ApplicationName);
-           var errorEntities =  _cloudTable.ExecuteQuery<ElmahEntity>(new TableQuery<ElmahEntity>().Where(TableQuery.GenerateFilterCondition("PartitionKey", "eq", partitionKey)))
-                .Skip(pageIndex * pageSize)
+            var tableQuery = _cloudTable.CreateQuery<ElmahEntity>()
+                .Where(e => e.PartitionKey == partitionKey)
                 .Take((pageIndex + 1) * pageSize);
+
+            var errorEntities = _cloudTable
+                .ExecuteQuery(tableQuery as TableQuery<ElmahEntity>)
+                .Skip(pageIndex * pageSize);
 
             foreach (var errorEntity in errorEntities)
             {
@@ -127,8 +131,8 @@ namespace Elmah.AzureTableStorage
             // Azure Table Storage cannot return the total number of records,
             // so if the max number of errors are displayed,
             // we will report an extra element to indicate to the user that more records may exist
-            return errorEntryList.Count == pageSize 
-                ? (pageIndex + 1) * pageSize + 1 
+            return errorEntryList.Count == pageSize
+                ? (pageIndex + 1) * pageSize + 1
                 : pageIndex * pageSize + errorEntryList.Count;
         }
 
@@ -140,8 +144,8 @@ namespace Elmah.AzureTableStorage
         public override ErrorLogEntry GetError(string id)
         {
             if (id == null) throw new ArgumentNullException("id");
-            if (id.Length == 0) throw new ArgumentException(null, "id"); 
-            
+            if (id.Length == 0) throw new ArgumentException(null, "id");
+
             var elmahEntity = _cloudTable.CreateQuery<ElmahEntity>()
                 .Where(e => e.RowKey == id)
                 .ToList()
