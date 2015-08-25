@@ -1,6 +1,5 @@
 ﻿using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
-using Microsoft.WindowsAzure.Storage.Table.DataServices;
 using System;
 using System.Collections;
 using System.Linq;
@@ -42,7 +41,7 @@ namespace Elmah.AzureTableStorage
             var cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
             var tableClient = cloudStorageAccount.CreateCloudTableClient();
             _cloudTable = tableClient.GetTableReference(TableName);
-            _cloudTable.CreateIfNotExists();
+                _cloudTable.CreateIfNotExists();
 
             //
             // Set the application name as this implementation provides
