@@ -33,3 +33,20 @@ By connection string:
     <errorLog type="Elmah.AzureTableStorage.AzureTableStorageErrorLog, Elmah.AzureTableStorage" 
         connectionString="UseDevelopmentStorage=true" />
 
+
+Configuration Parameters
+-----
+
+### Application Name
+
+Isolate per application in a single Elmah store
+
+    <errorLog type="Elmah.AzureTableStorage.AzureTableStorageErrorLog, Elmah.AzureTableStorage" 
+        connectionString="UseDevelopmentStorage=true" applicationName="MyApp" />
+
+### Table Name
+
+Set a custom table name (defaults to "Elmah"):
+
+    <errorLog type="Elmah.AzureTableStorage.AzureTableStorageErrorLog, Elmah.AzureTableStorage" 
+        connectionString="UseDevelopmentStorage=true" tableName="MyCustomElmahTable" />

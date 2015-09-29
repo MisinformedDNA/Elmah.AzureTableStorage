@@ -3,6 +3,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Elmah.AzureTableStorage
 {
@@ -14,7 +15,8 @@ namespace Elmah.AzureTableStorage
     public class AzureTableStorageErrorLog : ErrorLog
     {
         private readonly CloudTable _cloudTable;
-        private const string TableName = "Elmah";
+        private const string DefaultTableName = "Elmah";
+        private const string TableValidationRegex = "^[A-Za-z][A-Za-z0-9]{2,62}$";
 
         private const int MaxAppNameLength = 60;
 
@@ -38,9 +40,18 @@ namespace Elmah.AzureTableStorage
             if (connectionString.Length == 0)
                 throw new ApplicationException("Connection string is missing for the Azure Table Storage error log.");
 
+            //
+            // Get custom table name for storage and validate
+            //
+
+            var tableName = config.Find("tableName", DefaultTableName);
+
+            if(!Regex.IsMatch(tableName, TableValidationRegex))
+                throw new ApplicationException("Name for table in Azure Table Storage is not a valid name.");
+
             var cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
             var tableClient = cloudStorageAccount.CreateCloudTableClient();
-            _cloudTable = tableClient.GetTableReference(TableName);
+            _cloudTable = tableClient.GetTableReference(tableName);
             _cloudTable.CreateIfNotExists();
 
             //
