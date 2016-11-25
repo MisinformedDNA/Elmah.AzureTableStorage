@@ -14,9 +14,12 @@ namespace Elmah.AzureTableStorage
     public class AzureTableStorageErrorLog : ErrorLog
     {
         private readonly CloudTable _cloudTable;
-        private const string TableName = "Elmah";
+
+        private static volatile string TableName = "Elmah";
 
         private const int MaxAppNameLength = 60;
+
+        private const int MaxTableNameLength = 60;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AzureTableStorageErrorLog"/> class
@@ -28,20 +31,7 @@ namespace Elmah.AzureTableStorage
             if (config == null)
                 throw new ArgumentNullException("config");
 
-            var connectionString = ElmahHelper.GetConnectionString(config);
-
-            //
-            // If there is no connection string to use then throw an 
-            // exception to abort construction.
-            //
-
-            if (connectionString.Length == 0)
-                throw new ApplicationException("Connection string is missing for the Azure Table Storage error log.");
-
-            var cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
-            var tableClient = cloudStorageAccount.CreateCloudTableClient();
-            _cloudTable = tableClient.GetTableReference(TableName);
-            _cloudTable.CreateIfNotExists();
+            #region Read properties of ErrorLog config item
 
             //
             // Set the application name as this implementation provides
@@ -50,6 +40,37 @@ namespace Elmah.AzureTableStorage
 
             var appName = config.Find("applicationName", string.Empty);
 
+            //
+            // Set the table name. This implementation provides
+            // table-per-application-config isolation over a single store.
+            //
+
+            var tableName = config.Find("tableName", string.Empty);
+
+            #endregion Read properties of ErrorLog config item
+
+            #region Read properties of ErrorLog connection string
+
+            var cfgBuilder = new System.Data.Common.DbConnectionStringBuilder();
+            var originalConnectionString = ElmahHelper.GetConnectionString(config);
+            cfgBuilder.ConnectionString = originalConnectionString;
+
+            // Try to override ApplicationName from connection string
+            if (cfgBuilder.ContainsKey("ApplicationName"))
+            {
+                appName = (string)cfgBuilder["ApplicationName"];
+                cfgBuilder.Remove("ApplicationName");
+            }
+
+            // Try to override TableName from connection string            
+            if (cfgBuilder.ContainsKey("TableName"))
+            {
+                tableName = (string)cfgBuilder["TableName"];
+                cfgBuilder.Remove("TableName");
+            }
+
+            #endregion Read properties of ErrorLog connection string
+
             if (appName.Length > MaxAppNameLength)
             {
                 throw new ApplicationException(string.Format(
@@ -57,7 +78,44 @@ namespace Elmah.AzureTableStorage
                     MaxAppNameLength.ToString("N0")));
             }
 
-            ApplicationName = appName;
+            if (tableName.Length > MaxTableNameLength)
+            {
+                throw new ApplicationException(string.Format(
+                    "Table name is too long. Maximum length allowed is {0} characters.",
+                    MaxTableNameLength.ToString("N0")));
+            }
+
+            if (!string.IsNullOrWhiteSpace(appName))
+            {
+                ApplicationName = appName;
+            }
+
+            if (!string.IsNullOrWhiteSpace(tableName))
+            {
+                TableName = tableName;
+            }
+
+            var newConnectionString = string.Join(";", originalConnectionString.Split(';').Where(item => !item.StartsWith("ApplicationName=", StringComparison.OrdinalIgnoreCase) && !item.StartsWith("TableName=", StringComparison.OrdinalIgnoreCase)));
+            var newConnectionStringBuilder = new System.Data.Common.DbConnectionStringBuilder();
+            newConnectionStringBuilder.ConnectionString = newConnectionString;
+
+            if (!cfgBuilder.EquivalentTo(newConnectionStringBuilder))
+            {
+                throw new ApplicationException("Connection string contains invalid parameters.");
+            }
+
+            //
+            // If there is no connection string to use then throw an
+            // exception to abort construction.
+            //
+
+            if (cfgBuilder.ConnectionString.Length == 0)
+                throw new ApplicationException("Connection string is missing for the Azure Table Storage error log.");
+
+            var cloudStorageAccount = CloudStorageAccount.Parse(newConnectionString);
+            var tableClient = cloudStorageAccount.CreateCloudTableClient();
+            _cloudTable = tableClient.GetTableReference(TableName);
+            _cloudTable.CreateIfNotExists();
         }
 
         /// <summary>
