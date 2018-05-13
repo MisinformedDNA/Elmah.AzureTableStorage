@@ -1,5 +1,7 @@
+[![NuGet](https://img.shields.io/nuget/v/Elmah.AzureTableStorage.svg)](https://www.nuget.org/packages/Elmah.AzureTableStorage)
+
 Elmah.AzureTableStorage
-=======================
+======================
 
 Elmah plugin for Azure Table Storage
 
