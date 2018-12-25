@@ -57,5 +57,45 @@ namespace Elmah.AzureTableStorage
                  ? CloudConfigurationManager.GetSetting(connectionStringAppKey)
                  : string.Empty;
         }
+
+        public static string GetApplicationName(IDictionary config)
+        {
+            // Check for application name
+            var applicationName = config.Find("applicationName", string.Empty);
+            if (applicationName.Length > 0)
+                return applicationName;
+
+            // If not found then check for <appSettings> Key
+            var applicationNameAppKey = config.Find("applicationNameAppKey", string.Empty);
+            if (applicationNameAppKey.Length > 0)
+            {
+                applicationName = CloudConfigurationManager.GetSetting(applicationNameAppKey);
+
+                if (applicationName == null)
+                    return string.Empty;
+            }
+
+            return applicationName;
+        }
+
+        public static string GetTableName(IDictionary config)
+        {
+            // Check for table name
+            var tableName = config.Find("tableName", string.Empty);
+            if (tableName.Length > 0)
+                return tableName;
+
+            // If not found then check for <appSettings> Key
+            var tableNameAppKey = config.Find("tableNameAppKey", string.Empty);
+            if (tableNameAppKey.Length > 0)
+            {
+                tableName = CloudConfigurationManager.GetSetting(tableNameAppKey);
+
+                if (tableName == null)
+                    return string.Empty;
+            }
+
+            return tableName;
+        }
     }
 }

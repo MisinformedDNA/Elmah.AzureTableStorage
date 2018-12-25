@@ -44,9 +44,11 @@ namespace Elmah.AzureTableStorage
             // Get custom table name for storage and validate
             //
 
-            var tableName = config.Find("tableName", DefaultTableName);
+            var tableName = ElmahHelper.GetTableName(config);
+            if (tableName.Length == 0)
+                tableName = DefaultTableName;
 
-            if(!Regex.IsMatch(tableName, TableValidationRegex))
+            if (!Regex.IsMatch(tableName, TableValidationRegex))
                 throw new ApplicationException("Name for table in Azure Table Storage is not a valid name.");
 
             var cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
@@ -59,7 +61,7 @@ namespace Elmah.AzureTableStorage
             // per-application isolation over a single store.
             //
 
-            var appName = config.Find("applicationName", string.Empty);
+            var appName = ElmahHelper.GetApplicationName(config);
 
             if (appName.Length > MaxAppNameLength)
             {
