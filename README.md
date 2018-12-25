@@ -46,9 +46,23 @@ Isolate per application in a single Elmah store
     <errorLog type="Elmah.AzureTableStorage.AzureTableStorageErrorLog, Elmah.AzureTableStorage" 
         connectionString="UseDevelopmentStorage=true" applicationName="MyApp" />
 
+By application setting:
+
+    <errorLog type="Elmah.AzureTableStorage.AzureTableStorageErrorLog, Elmah.AzureTableStorage" 
+        connectionString="UseDevelopmentStorage=true" applicationNameAppKey="ApplicationName" />
+
+Make sure you add an element under the `appSettings` element.
+
 ### Table Name
 
 Set a custom table name (defaults to "Elmah"):
 
     <errorLog type="Elmah.AzureTableStorage.AzureTableStorageErrorLog, Elmah.AzureTableStorage" 
         connectionString="UseDevelopmentStorage=true" tableName="MyCustomElmahTable" />
+
+By application setting:
+
+    <errorLog type="Elmah.AzureTableStorage.AzureTableStorageErrorLog, Elmah.AzureTableStorage" 
+        connectionString="UseDevelopmentStorage=true" tableNameAppKey="ElmahTableName" />
+
+Make sure you add an element under the `appSettings` element.
